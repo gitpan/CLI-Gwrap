@@ -15,7 +15,7 @@ use warnings;
 package CLI::Gwrapper;
 use Types::Standard qw( Str Int Bool ArrayRef CodeRef InstanceOf );
 
-our $VERSION = '0.026'; # VERSION
+our $VERSION = '0.027'; # VERSION
 
 use Moo::Role;
 use IPC::Run;
@@ -81,7 +81,7 @@ CLI::Gwrapper.pm - specifies requirements for the Gwrapper role for CLI::Gwrap
 
 =head1 VERSION
 
-version 0.026
+version 0.027
 
 =head1 SYNOPSIS
 

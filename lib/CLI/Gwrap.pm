@@ -17,7 +17,7 @@ use Moo;
 use Types::Standard qw( Str Int Bool ArrayRef InstanceOf );
 use Carp;
 
-our $VERSION = '0.026'; # VERSION
+our $VERSION = '0.027'; # VERSION
 
 use CLI::Gwrap::Opt;
 use Exporter 'import';
@@ -152,7 +152,7 @@ CLI::Gwrap.pm - GUI wrapper for command line scripts and programs
 
 =head1 VERSION
 
-version 0.026
+version 0.027
 
 =head1 SYNOPSIS
 

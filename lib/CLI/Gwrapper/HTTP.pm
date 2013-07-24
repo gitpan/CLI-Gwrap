@@ -22,7 +22,7 @@ use File::Spec;
 use Readonly;
 use Dancer qw( :moose );
 
-our $VERSION = '0.026'; # VERSION
+our $VERSION = '0.027'; # VERSION
 
 get '/gwrap' => sub {
 
@@ -103,7 +103,7 @@ Gwrapper::HTTP.pm - provides the HTTP Gwrapper role for CLI::Gwrap
 
 =head1 VERSION
 
-version 0.026
+version 0.027
 
 =head1 AUTHOR
 
