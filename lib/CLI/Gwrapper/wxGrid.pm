@@ -41,7 +41,7 @@ has 'STDERR_page'      => (is => 'rw', isa => InstanceOf['Wx::Panel']);
 has 'STDOUT_text_ctrl' => (is => 'rw', isa => InstanceOf['Wx::TextCtrl']);
 has 'STDERR_text_ctrl' => (is => 'rw', isa => InstanceOf['Wx::TextCtrl']);
 
-our $VERSION = '0.027'; # VERSION
+our $VERSION = '0.029'; # VERSION
 
 sub BUILD {
     my ($self, $params) = @_;
@@ -611,7 +611,7 @@ sub _execute_and_show {
 
 1;
 
-__END__
+
 
 =pod
 
@@ -621,7 +621,7 @@ CLI::Gwrapper::wxGrid - CLI::Gwrap graphical wrapper in a wxGrid
 
 =head1 VERSION
 
-version 0.027
+version 0.029
 
 =head1 DESCRIPTION
 
@@ -632,6 +632,7 @@ inside a Wx::Grid on the first page of the Notebook.  STDOUT and STDERR are
 written to a second and third page of the Notebook.
 
 =head1 SEE ALSO
+
 CLI::Gwrap
 
 =head1 AUTHOR
@@ -646,3 +647,7 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+
+
+__END__
+

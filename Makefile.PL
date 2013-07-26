@@ -12,6 +12,7 @@ my %WriteMakefileArgs = (
   "ABSTRACT" => "GUI wrapper for command line scripts and programs",
   "AUTHOR" => "Reid Augustin <reid\@hellosix.com>",
   "BUILD_REQUIRES" => {
+    "English" => 0,
     "Test::More" => 0
   },
   "CONFIGURE_REQUIRES" => {
@@ -41,7 +42,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.027",
+  "VERSION" => "0.029",
   "test" => {
     "TESTS" => "t/*.t"
   }

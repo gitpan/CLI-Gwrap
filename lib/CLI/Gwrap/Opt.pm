@@ -17,7 +17,7 @@ package CLI::Gwrap::Opt;
 use Moo;
 use Types::Standard qw( Int Str ArrayRef HashRef CodeRef );
 
-our $VERSION = '0.027'; # VERSION
+our $VERSION = '0.029'; # VERSION
 
 has 'type'        => (is => 'ro', isa => Str);
 has 'name'        => (is => 'ro', isa => ArrayRef, trigger => sub {
@@ -66,7 +66,7 @@ sub name_for_CLI {
 
 1;
 
-__END__
+
 
 =pod
 
@@ -76,7 +76,7 @@ CLI::Gwrap::Opt.pm - a single CLI option item for CLI::Gwrap
 
 =head1 VERSION
 
-version 0.027
+version 0.029
 
 =head1 DESCRIPTION
 
@@ -87,44 +87,60 @@ CLI::Gwrap::Opt encapsulates individual options for CLI::Gwrap.
 =over
 
 =item type => 'string'
+
 A string naming the type of option (check, radio, string, etc).
 
-=item name => 'string'
-This is the name of the option as used on the command line.  When this
-option is set, the defaultjoiner is also determined, unless the joiner has
-already been set.
+=item name => [ 'name', 'long name' ]
+
+This is the name of the option as used on the command line, and a
+description that should be more useful for casual users.  When B<name> is
+set, the default joiner is also determined (from the length of 'name'),
+unless the joiner has already been set.  Single letter 'name's get a space
+(' ') joiner, and longer 'name's get an equals sign ('=').
 
 =item description' => (is => 'ro', isa => Str);
-A short, (possibly) more useful description of the option.
+
+A short description of the option which is usually presented to the user
+when the mouse 'hovers' over the option.
 
 =item state => 'string'
-Initial state of the option.
+
+Initial state of the option.  The option B<type> determines the context for
+the B<state>: B<check>s are true/false, B<string>s are text, etc.
 
 =item label => 'string'
+
 Overrides the normal name/description rules for the option label in the
 GUI.
 
-=item choices => [ 'choices' ]
+=item choices => [ 'choices', ... ]
+
 Reference to an array of the choices for a radio option.
 
 =item width => number
+
 The number of pixels for input widgets for which a width might make sense
-(string, integer, etc)
+(B<string>, B<integer>, etc).  These widgets normally exapnd with the
+enclosing window, setting a width overrides this behavior.
 
 =item joiner => 'string'
-How to join the option name to the opion value.  Default for short
+
+How to join the option name to the option value.  Default for short
 (single-letter) options is a space, and for long options is an equals sign.
 
 =item widget => object
+
 Used by the GUI wrapper to store a pointer to the widget for this option.
 
 =item retriever => coderef
+
 Used by the GUI wrapper to store a reference to a subroutine that can read
 back the value of the option widget.
 
 =back
 
 =head1 SEE ALSO
+
 CLI::Gwrap
 
 =head1 AUTHOR
@@ -139,3 +155,7 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+
+
+__END__
+

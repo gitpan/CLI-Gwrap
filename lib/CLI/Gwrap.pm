@@ -17,7 +17,7 @@ use Moo;
 use Types::Standard qw( Str Int Bool ArrayRef InstanceOf );
 use Carp;
 
-our $VERSION = '0.027'; # VERSION
+our $VERSION = '0.029'; # VERSION
 
 use CLI::Gwrap::Opt;
 use Exporter 'import';
@@ -142,7 +142,7 @@ BEGIN {
 
 1;
 
-__END__
+
 
 =pod
 
@@ -152,7 +152,7 @@ CLI::Gwrap.pm - GUI wrapper for command line scripts and programs
 
 =head1 VERSION
 
-version 0.027
+version 0.029
 
 =head1 SYNOPSIS
 
@@ -177,10 +177,10 @@ follow the default CLI::Gwrapper::wxGrid as an example.
 
 =over
 
-=item CLI::Gwrap->new( %hash )
+=item my $gwrap = CLI::Gwrap->new( %hash )
 
-Creates and runs a new GUI Wrapper.  B<%hash> describes the particulars of
-how the GUI should look and behave for the CLI command.
+Creates a new GUI Wrapper.  B<%hash> describes the particulars of how the
+GUI should look and behave.
 
 CLI::Gwrap is intended to make traditionally difficult CLI programs more
 easily accessible.  To help, there are places where CLI::Gwrap accepts
@@ -264,6 +264,19 @@ below).
 
 =back
 
+=item $gwrap->run
+
+Runs the CLI::Gwrap object by calling its B<run> method (which is required
+by the CLI::Gwrapper role).  For (e.g.) the B<wxGrid> Gwrapper, this calls
+Wx::MainLoop.
+
+=item $gwrap->title( [ 'new title' ])
+
+Get or set the GUI window title.  The title is normally set to the
+unadorned command name when the GUI is first presented.  When the 'Execute'
+button is clicked, the title is changed to the command name followed by all
+the options as specified by the user.
+
 =back
 
 =head1 OPTION FUNCTIONS
@@ -274,27 +287,32 @@ B<new()> to populate the CLI program option fields in the GUI.
 Option functions all take a NAME as the first argument, and a 'description'
 as the second.  The description is typically displayed when the user hovers
 the mouse over the option NAME or field.  Additional named options may
-follow.  Named options include:
+follow.  Named options include (see CLI::Gwrap::Opt for a full list):
 
 =over
 
 =item state => 'initial state'
+
 The initial state of the option, interpreted in the context of the option
 (e.g: B<check> is true/false, B<string> is a string, B<radio> is one of the
 choices).
 
 =item label => 'override label'
+
 A string to override the normal label derived from the NAME.  This can be
 set (e.g) to the empty string to disply no label.
 
 =item width => pixels
+
 The number of pixels for the width of a B<string>, B<integer>, or
 B<increment> widget.
 
 =item choices => [ qw( array of choices ) ]
+
 Passes a reference to an array of choices for a B<radio> option.
 
 =item joiner => 'string'
+
 The 'joiner' to use for the CLI command line between the option name and
 the option value.  The default is for single-letter options to use a single
 space:
@@ -318,23 +336,24 @@ interpreted as true or false.
 
 =item radio( NAME, 'description', %opts )
 
-Create a radio button or drop-down combo box.  Set the choices with
+Create a radio button or drop-down combo box.  Set the choices with the
+B<choices> named option:
 
-    B<$opts->{choices} => [ qw( the array of choices ) ],
+    choices => [ qw( the array of choices ) ],
 
 The first element of the arrayref must be the CLI program's default.
 
-B<$opts->{state}>, if it exists, must be one of the choices.
+If the B<state> named option is declared, it must be one of the choices.
 
-If the default is selected, this NAME will not be explicitly called out.
+If the default is selected, this NAME will not be explicitly called out on
+the command line.
 
 =item string( NAME, 'description', %opts )
 
 =item hash( NAME, 'description', %opts )
 
-Create a text-entry widget.  B<$opts->{state}>, if it exists, is set to the
-initial value.  $opts->{joiner} defaults to ' ' (space) for single letter
-(short) options, and '=' (equals) for long options.
+Create a text-entry widget.  If the B<state> is specified, the initial
+value in the text-entry widget is set.
 
 B<string> is for single-use options.
 
@@ -342,7 +361,11 @@ B<hash> is used for muliple-use options: the value is split into tokens (on
 whitespace), and NAME is used once for each token.  For example, if the
 user enters "AAA bbb    XyZ", the CLI program is called with:
 
-        '... NAME=AAA NAME=bbb NAME=XyZ ...'
+        '... -x AAA -x bbb -x XyZ ...'
+
+or
+
+        '... --long_opt=AAA --long_opt=bbb --long_opt=XyZ ...'
 
 =item integer( NAME, 'description', %opts )
 
@@ -425,8 +448,6 @@ the /bin directory of the distribution package:
 
  );
 
-=head1 SEE ALSO
-
 =head1 AUTHOR
 
 Reid Augustin <reid@hellosix.com>
@@ -439,3 +460,7 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+
+
+__END__
+
