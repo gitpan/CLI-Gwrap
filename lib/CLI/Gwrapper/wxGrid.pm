@@ -41,7 +41,7 @@ has 'STDERR_page'      => (is => 'rw', isa => InstanceOf['Wx::Panel']);
 has 'STDOUT_text_ctrl' => (is => 'rw', isa => InstanceOf['Wx::TextCtrl']);
 has 'STDERR_text_ctrl' => (is => 'rw', isa => InstanceOf['Wx::TextCtrl']);
 
-our $VERSION = '0.029'; # VERSION
+our $VERSION = '0.030'; # VERSION
 
 sub BUILD {
     my ($self, $params) = @_;
@@ -621,7 +621,7 @@ CLI::Gwrapper::wxGrid - CLI::Gwrap graphical wrapper in a wxGrid
 
 =head1 VERSION
 
-version 0.029
+version 0.030
 
 =head1 DESCRIPTION
 

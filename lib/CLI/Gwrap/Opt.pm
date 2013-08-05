@@ -17,7 +17,7 @@ package CLI::Gwrap::Opt;
 use Moo;
 use Types::Standard qw( Int Str ArrayRef HashRef CodeRef );
 
-our $VERSION = '0.029'; # VERSION
+our $VERSION = '0.030'; # VERSION
 
 has 'type'        => (is => 'ro', isa => Str);
 has 'name'        => (is => 'ro', isa => ArrayRef, trigger => sub {
@@ -76,7 +76,7 @@ CLI::Gwrap::Opt.pm - a single CLI option item for CLI::Gwrap
 
 =head1 VERSION
 
-version 0.029
+version 0.030
 
 =head1 DESCRIPTION
 

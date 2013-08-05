@@ -25,7 +25,7 @@ use CLI::Gwrap qw(
     incremental
 );
 
-our $VERSION = '0.029'; # VERSION
+our $VERSION = '0.030'; # VERSION
 
 my $gwrap = CLI::Gwrap->new(
     command     => 'ls',
@@ -390,7 +390,7 @@ gwrap_ls.pl - ls wrapped in CLI::Gwrap.pm
 
 =head1 VERSION
 
-version 0.029
+version 0.030
 
 =head1 AUTHOR
 

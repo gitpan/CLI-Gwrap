@@ -15,7 +15,7 @@ use warnings;
 package CLI::Gwrapper;
 use Types::Standard qw( Str Int Bool ArrayRef CodeRef InstanceOf );
 
-our $VERSION = '0.029'; # VERSION
+our $VERSION = '0.030'; # VERSION
 
 use Moo::Role;
 use IPC::Run;
@@ -43,23 +43,16 @@ has 'advanced'      => (
     default => sub { return []},
 );
 has 'timeout'       => (is => 'rw', isa => Int, default => 10);
-#has 'exec_callback' => (is => 'ro', isa => CodeRef);
+has 'exec_callback' => (is => 'rw', isa => CodeRef, default => sub { return \&default_exec_callback; }, );
 
-sub execute_callback {
-    my ($self, @cmd) = @_;
+sub default_exec_callback {
+    my ($self, $cmd_ref) = @_;
 
-    if (ref $cmd[0] eq 'ARRAY') {
-        @cmd = @{$cmd[0]};
-    }
-
-    # Incrementally read from / write to scalars.
-    # $in is drained as it is fed to cat's stdin,
-    # $out accumulates cat's stdout
-    # $err accumulates cat's stderr
-    # $h is for "harness".
+    # $out accumulates cmd's stdout
+    # $err accumulates cmd's stderr
     my ($out, $err);
     IPC::Run::run(
-        \@cmd,          # command line (in array format)
+        $cmd_ref,       # command line (in array format)
         \undef,         # close STDIN
         \$out,          # STDOUT to $out
         \$err,          # STDERR to $err
@@ -67,7 +60,15 @@ sub execute_callback {
     );
 
     return ($?, $out, $err);
+
 }
+
+sub execute_callback {
+    my ($self, $cmd_ref) = @_;
+
+    return $self->exec_callback->($self, $cmd_ref);
+}
+
 
 1;
 
@@ -81,7 +82,7 @@ CLI::Gwrapper.pm - specifies requirements for the Gwrapper role for CLI::Gwrap
 
 =head1 VERSION
 
-version 0.029
+version 0.030
 
 =head1 SYNOPSIS
 

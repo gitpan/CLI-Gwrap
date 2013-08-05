@@ -14,10 +14,10 @@ use warnings;
 
 package CLI::Gwrap;
 use Moo;
-use Types::Standard qw( Str Int Bool ArrayRef InstanceOf );
+use Types::Standard qw( Str Int Bool ArrayRef CodeRef InstanceOf );
 use Carp;
 
-our $VERSION = '0.029'; # VERSION
+our $VERSION = '0.030'; # VERSION
 
 use CLI::Gwrap::Opt;
 use Exporter 'import';
@@ -39,7 +39,7 @@ has 'command'       => (is => 'ro', trigger => sub {
     } );
 has 'main_opt'      => (is => 'ro', isa => InstanceOf['CLI::Gwrap::Opt']);
 has 'description'   => (is => 'ro', isa => Str);
-has 'gwrapper_name' => (is => 'ro', isa => Str, default => sub { 'wxGrid' });
+has 'gwrapper_name' => (is => 'ro', isa => Str, default => 'wxGrid');
 has 'gwrapper'      => (is => 'rw');
 has 'columns'       => (is => 'rw', isa => Int, default => 3);
 has 'verbatim'      => (is => 'ro', isa => Bool);
@@ -47,6 +47,7 @@ has 'help'          => (is => 'ro', isa => Str);
 has 'persist'       => (is => 'ro', isa => Bool);
 has 'opts'          => (is => 'ro', isa => ArrayRef[InstanceOf['CLI::Gwrap::Opt']]);
 has 'advanced'      => (is => 'ro', isa => ArrayRef[InstanceOf['CLI::Gwrap::Opt']]);
+has 'exec_callback' => (is => 'ro', isa => CodeRef);
 has 'timeout'       => (is => 'ro', isa => Int);
 
 sub BUILD {
@@ -60,8 +61,6 @@ sub BUILD {
 
     my %opts = (
         title         => $self->command->[0],
-        help_callback => \&help_callback,
-        exec_callback => \&exec_callback,
     );
     for my $opt ( qw(
         command
@@ -73,11 +72,15 @@ sub BUILD {
         columns
         opts
         advanced
+        exec_callback
         timeout
     ) ) {
         $opts{$opt} = $self->$opt if (defined $self->$opt);
     }
     $self->gwrapper( $plugin->new(%opts) );
+    if (not $self->gwrapper->DOES('CLI::Gwrapper')) {
+        die "$plugin doesn't fullfil the CLI::Gwrapper role\n"
+    }
 }
 
 sub title {
@@ -152,7 +155,7 @@ CLI::Gwrap.pm - GUI wrapper for command line scripts and programs
 
 =head1 VERSION
 
-version 0.029
+version 0.030
 
 =head1 SYNOPSIS
 
@@ -261,6 +264,42 @@ exposes the less common options (which are normally hidden).
 
 The elements of these arrays are built by calling the OPTION FUNCTIONS (see
 below).
+
+=item exec_callback => sub { ... }
+
+When the 'Execute' (or 'Help') button in the GUI is clicked, CLI::Gwrapper
+by default calls a function that calls IPC::Run::run(...) to execute the
+CLI script or program.  You can set your own B<exec_callback> function here
+to override that behavior.  This makes it easy to use CLI::Gwrap directly
+in a script (as opposed to writing a wrapper for an existing script).  The
+callback function should be something like this:
+
+    sub my_exec_callback {
+        my ($self, $cmd_ref) = @_;  # $cmd_ref is an ArrayRef consisting
+                                    #   of the command and all the options,
+                                    #   as collected from the GUI
+
+        my ($stdout, $stderr);
+        local (*STDOUT, *STDERR);
+        open(STDOUT, ">", \$stdout)
+            or die "failed to redirect STDOUT\n";
+        open(STDERR, ">", \$stderr)
+            or die "failed to redirect STDERR\n";
+
+        ############################################
+        #
+        # Your script-specific execution here
+        #
+        ############################################
+
+        return ($?, $stdout, $stderr);
+    }
+
+=item timeout => number
+
+The timeout, in seconds, used by IPC::Run::run(...) when calling the script
+or program (when the 'Execute' or 'Help' button is clicked in the GUI).
+The default is 10 (seconds).
 
 =back
 

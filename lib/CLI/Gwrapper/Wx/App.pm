@@ -21,7 +21,7 @@ use Wx;
 extends 'Wx::App';
 use Carp;
 
-our $VERSION = '0.029'; # VERSION
+our $VERSION = '0.030'; # VERSION
 
 has frame => (
     is       => 'ro',
@@ -87,7 +87,7 @@ CLI::Gwrapper::Wx::App - Wx::App for CLI::Gwrap
 
 =head1 VERSION
 
-version 0.029
+version 0.030
 
 =head1 DESCRIPTION
 
